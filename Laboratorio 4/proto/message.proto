@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "Laboratorio 4/proto";
+
+import "google/protobuf/empty.proto";
+
+package grpc;
+
+message Message {
+    string body = 1;
+}
+
+service MessageService {
+    rpc RequestDoshBank(Message) returns (Message);
+    rpc RequestDirector(Message) returns (Message);
+    rpc RequestDecision(Message) returns (Message);
+    rpc AddInformation(Message) returns (google.protobuf.Empty);
+}

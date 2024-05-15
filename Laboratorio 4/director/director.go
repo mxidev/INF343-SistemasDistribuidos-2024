@@ -13,13 +13,16 @@ func main() {
 
 		var opcion string
 		fmt.Scanln(&opcion)
+
 		switch opcion {
 		case "1":
 			fmt.Println("Iniciando mision ...")
 			menuOpciones := "\n     ============================\n    |1. Avanzar al siguiente piso|\n    |2. Volver al menu anterior  |\n     ============================\nIngrese una opcion: "
 			fmt.Println(menuOpciones)
+
 			var seguir string
 			fmt.Scanln(&seguir)
+
 			switch seguir {
 			case "1":
 				fmt.Println("Avanzando al siguiente piso ...")
@@ -30,6 +33,7 @@ func main() {
 				fmt.Println("No se ingreso una opcion valida. Se volvera al menu anterior.")
 				fmt.Println()
 			}
+
 		case "2":
 			fmt.Println("Terminando programa ...")
 			os.Exit(1)
