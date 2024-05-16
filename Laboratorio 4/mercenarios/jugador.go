@@ -1,9 +1,24 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strconv"
+	"time"
 )
+
+func comunicar(decision int) {
+	//Realizar solicitud
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	//poner el pb
+
+	//Problemas para ocupar la función
+	if err != nil {
+		fmt.Println("Error al ocupar función solicitarM()")
+	}
+}
 
 func main() {
 	var i int
