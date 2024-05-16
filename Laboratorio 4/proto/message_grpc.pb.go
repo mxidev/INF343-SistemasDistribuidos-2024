@@ -39,7 +39,7 @@ func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
 
 func (c *messageServiceClient) RequestDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/grpc.MessageService/RequestDoshBank", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDoshBank", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (c *messageServiceClient) RequestDoshBank(ctx context.Context, in *Message,
 
 func (c *messageServiceClient) RequestDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/grpc.MessageService/RequestDirector", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDirector", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *messageServiceClient) RequestDirector(ctx context.Context, in *Message,
 
 func (c *messageServiceClient) RequestDecision(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/grpc.MessageService/RequestDecision", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDecision", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *messageServiceClient) RequestDecision(ctx context.Context, in *Message,
 
 func (c *messageServiceClient) AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/grpc.MessageService/AddInformation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/AddInformation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func _MessageService_RequestDoshBank_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.MessageService/RequestDoshBank",
+		FullMethod: "/proto.MessageService/RequestDoshBank",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageServiceServer).RequestDoshBank(ctx, req.(*Message))
@@ -141,7 +141,7 @@ func _MessageService_RequestDirector_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.MessageService/RequestDirector",
+		FullMethod: "/proto.MessageService/RequestDirector",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageServiceServer).RequestDirector(ctx, req.(*Message))
@@ -159,7 +159,7 @@ func _MessageService_RequestDecision_Handler(srv interface{}, ctx context.Contex
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.MessageService/RequestDecision",
+		FullMethod: "/proto.MessageService/RequestDecision",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageServiceServer).RequestDecision(ctx, req.(*Message))
@@ -177,7 +177,7 @@ func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpc.MessageService/AddInformation",
+		FullMethod: "/proto.MessageService/AddInformation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(MessageServiceServer).AddInformation(ctx, req.(*Message))
@@ -189,7 +189,7 @@ func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var MessageService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpc.MessageService",
+	ServiceName: "proto.MessageService",
 	HandlerType: (*MessageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
