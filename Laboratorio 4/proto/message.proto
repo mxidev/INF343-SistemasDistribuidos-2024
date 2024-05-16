@@ -11,8 +11,10 @@ message Message {
 }
 
 service MessageService {
-    rpc RequestDoshBank(Message) returns (Message);
-    rpc RequestDirector(Message) returns (Message);
+    rpc RequestMountToDoshBank(Message) returns (Message);
+    rpc RequestMountToDirector(Message) returns (Message);
     rpc RequestDecision(Message) returns (Message);
+    rpc RequestInformationToDataNode(Message) returns (Message);
     rpc AddInformation(Message) returns (google.protobuf.Empty);
+    rpc SendInformation(Message) returns (Message);
 }
