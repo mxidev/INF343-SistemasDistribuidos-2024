@@ -23,10 +23,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MessageServiceClient interface {
-	RequestDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
-	RequestDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
+	RequestMountToDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
+	RequestMountToDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	RequestDecision(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
+	RequestInformationToDataNode(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error)
+	SendInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 }
 
 type messageServiceClient struct {
@@ -37,18 +39,18 @@ func NewMessageServiceClient(cc grpc.ClientConnInterface) MessageServiceClient {
 	return &messageServiceClient{cc}
 }
 
-func (c *messageServiceClient) RequestDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
+func (c *messageServiceClient) RequestMountToDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDoshBank", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestMountToDoshBank", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *messageServiceClient) RequestDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
+func (c *messageServiceClient) RequestMountToDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDirector", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestMountToDirector", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,9 +66,27 @@ func (c *messageServiceClient) RequestDecision(ctx context.Context, in *Message,
 	return out, nil
 }
 
+func (c *messageServiceClient) RequestInformationToDataNode(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestInformationToDataNode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *messageServiceClient) AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/proto.MessageService/AddInformation", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *messageServiceClient) SendInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
+	out := new(Message)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/SendInformation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +97,12 @@ func (c *messageServiceClient) AddInformation(ctx context.Context, in *Message, 
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
-	RequestDoshBank(context.Context, *Message) (*Message, error)
-	RequestDirector(context.Context, *Message) (*Message, error)
+	RequestMountToDoshBank(context.Context, *Message) (*Message, error)
+	RequestMountToDirector(context.Context, *Message) (*Message, error)
 	RequestDecision(context.Context, *Message) (*Message, error)
+	RequestInformationToDataNode(context.Context, *Message) (*Message, error)
 	AddInformation(context.Context, *Message) (*empty.Empty, error)
+	SendInformation(context.Context, *Message) (*Message, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -88,17 +110,23 @@ type MessageServiceServer interface {
 type UnimplementedMessageServiceServer struct {
 }
 
-func (UnimplementedMessageServiceServer) RequestDoshBank(context.Context, *Message) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestDoshBank not implemented")
+func (UnimplementedMessageServiceServer) RequestMountToDoshBank(context.Context, *Message) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestMountToDoshBank not implemented")
 }
-func (UnimplementedMessageServiceServer) RequestDirector(context.Context, *Message) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestDirector not implemented")
+func (UnimplementedMessageServiceServer) RequestMountToDirector(context.Context, *Message) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestMountToDirector not implemented")
 }
 func (UnimplementedMessageServiceServer) RequestDecision(context.Context, *Message) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestDecision not implemented")
 }
+func (UnimplementedMessageServiceServer) RequestInformationToDataNode(context.Context, *Message) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestInformationToDataNode not implemented")
+}
 func (UnimplementedMessageServiceServer) AddInformation(context.Context, *Message) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddInformation not implemented")
+}
+func (UnimplementedMessageServiceServer) SendInformation(context.Context, *Message) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendInformation not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -113,38 +141,38 @@ func RegisterMessageServiceServer(s grpc.ServiceRegistrar, srv MessageServiceSer
 	s.RegisterService(&MessageService_ServiceDesc, srv)
 }
 
-func _MessageService_RequestDoshBank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MessageService_RequestMountToDoshBank_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Message)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).RequestDoshBank(ctx, in)
+		return srv.(MessageServiceServer).RequestMountToDoshBank(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.MessageService/RequestDoshBank",
+		FullMethod: "/proto.MessageService/RequestMountToDoshBank",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).RequestDoshBank(ctx, req.(*Message))
+		return srv.(MessageServiceServer).RequestMountToDoshBank(ctx, req.(*Message))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_RequestDirector_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MessageService_RequestMountToDirector_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Message)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).RequestDirector(ctx, in)
+		return srv.(MessageServiceServer).RequestMountToDirector(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.MessageService/RequestDirector",
+		FullMethod: "/proto.MessageService/RequestMountToDirector",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).RequestDirector(ctx, req.(*Message))
+		return srv.(MessageServiceServer).RequestMountToDirector(ctx, req.(*Message))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -167,6 +195,24 @@ func _MessageService_RequestDecision_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_RequestInformationToDataNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Message)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).RequestInformationToDataNode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.MessageService/RequestInformationToDataNode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).RequestInformationToDataNode(ctx, req.(*Message))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Message)
 	if err := dec(in); err != nil {
@@ -185,6 +231,24 @@ func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MessageService_SendInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Message)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MessageServiceServer).SendInformation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.MessageService/SendInformation",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MessageServiceServer).SendInformation(ctx, req.(*Message))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -193,20 +257,28 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*MessageServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RequestDoshBank",
-			Handler:    _MessageService_RequestDoshBank_Handler,
+			MethodName: "RequestMountToDoshBank",
+			Handler:    _MessageService_RequestMountToDoshBank_Handler,
 		},
 		{
-			MethodName: "RequestDirector",
-			Handler:    _MessageService_RequestDirector_Handler,
+			MethodName: "RequestMountToDirector",
+			Handler:    _MessageService_RequestMountToDirector_Handler,
 		},
 		{
 			MethodName: "RequestDecision",
 			Handler:    _MessageService_RequestDecision_Handler,
 		},
 		{
+			MethodName: "RequestInformationToDataNode",
+			Handler:    _MessageService_RequestInformationToDataNode_Handler,
+		},
+		{
 			MethodName: "AddInformation",
 			Handler:    _MessageService_AddInformation_Handler,
+		},
+		{
+			MethodName: "SendInformation",
+			Handler:    _MessageService_SendInformation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
