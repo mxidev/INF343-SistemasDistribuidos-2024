@@ -10,6 +10,7 @@ message Message {
     string body = 1;
 }
 
+
 service MessageService {
     rpc RequestMountToDoshBank(Message) returns (Message);
     rpc RequestMountToDirector(Message) returns (Message);

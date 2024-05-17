@@ -56,7 +56,7 @@ func (s *Server) RequestMountToDirector(ctx context.Context, message *Message) (
 
 func (s *Server) RequestDecisionToMercenary(ctx context.Context, message *Message) (*Message, error) {
 	fmt.Printf("Solicitud de Decision recibida: %s\n", message.Body)
-	return message, nil // Por mientras
+	return &Message{Body: "OK"}, nil // Por mientras
 }
 
 func (s *Server) RequestInformationToDataNode(ctx context.Context, message *Message) (*Message, error) {

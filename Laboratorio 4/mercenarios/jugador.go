@@ -1,18 +1,19 @@
 package main
 
 import (
-	"context"
 	"fmt"
+	pb "grpc/proto"
 	"strconv"
-	"time"
+
+	"google.golang.org/grpc"
 )
 
 func comunicar(decision int) {
 	//Realizar solicitud
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
+	conn, err := grpc.Dial("host:port", grpc.WithInsecure())
 
 	//poner el pb
+	proto := pb.NewMessageServiceClient(conn)
 
 	//Problemas para ocupar la función
 	if err != nil {
@@ -23,6 +24,14 @@ func comunicar(decision int) {
 func main() {
 	var i int
 	begin := true
+
+	conn, err := grpc.Dial("host:port", grpc.WithInsecure())
+	if err != nil {
+		fmt.Println("Error connecting")
+	}
+	defer conn.Close()
+
+	client := pb.NewMessageServiceClient(conn)
 
 	for begin {
 		fmt.Print("Si está listo ingrese [1]\n")
