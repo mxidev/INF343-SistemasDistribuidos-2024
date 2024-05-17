@@ -10,11 +10,9 @@ message Message {
     string body = 1;
 }
 
-
 service MessageService {
-    rpc RequestMountToDoshBank(Message) returns (Message);
-    rpc RequestMountToDirector(Message) returns (Message);
-    rpc RequestDecisionToMercenary(Message) returns (Message);
-    rpc RequestInformationToDataNode(Message) returns (Message);
+    rpc RequestMount(Message) returns (Message);
+    rpc RequestInformation(Message) returns (Message);
+    rpc RequestInformationFromNameNode(Message) returns (Message);
     rpc AddInformation(Message) returns (google.protobuf.Empty);
 }
