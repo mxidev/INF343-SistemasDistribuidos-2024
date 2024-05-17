@@ -7,8 +7,8 @@ COPY . .
 
 
 
-RUN go build -o tierra .
+RUN go build -o director .
 
 EXPOSE 3000
 
-CMD ["/app/tierra"]
+CMD ["/app/director"]

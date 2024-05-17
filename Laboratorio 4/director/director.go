@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 func main() {
@@ -36,7 +35,7 @@ func main() {
 
 		case "2":
 			fmt.Println("Terminando programa ...")
-			os.Exit(1)
+			continuar = false
 		default:
 			fmt.Println("Opcion invalida, intentelo nuevamente.")
 		}
