@@ -44,7 +44,7 @@ func main() {
 			}
 
 		case "2":
-			fmt.Println("Terminando programa...")
+			fmt.Println("Terminando programa ...")
 			os.Exit(1)
 		default:
 			fmt.Println("Opcion invalida, intentelo nuevamente.")
