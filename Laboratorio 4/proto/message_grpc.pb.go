@@ -25,10 +25,9 @@ const _ = grpc.SupportPackageIsVersion7
 type MessageServiceClient interface {
 	RequestMountToDoshBank(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	RequestMountToDirector(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
-	RequestDecision(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
+	RequestDecisionToMercenary(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	RequestInformationToDataNode(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error)
-	SendInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 }
 
 type messageServiceClient struct {
@@ -57,9 +56,9 @@ func (c *messageServiceClient) RequestMountToDirector(ctx context.Context, in *M
 	return out, nil
 }
 
-func (c *messageServiceClient) RequestDecision(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
+func (c *messageServiceClient) RequestDecisionToMercenary(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
 	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDecision", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestDecisionToMercenary", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,25 +83,15 @@ func (c *messageServiceClient) AddInformation(ctx context.Context, in *Message, 
 	return out, nil
 }
 
-func (c *messageServiceClient) SendInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
-	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/SendInformation", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
 	RequestMountToDoshBank(context.Context, *Message) (*Message, error)
 	RequestMountToDirector(context.Context, *Message) (*Message, error)
-	RequestDecision(context.Context, *Message) (*Message, error)
+	RequestDecisionToMercenary(context.Context, *Message) (*Message, error)
 	RequestInformationToDataNode(context.Context, *Message) (*Message, error)
 	AddInformation(context.Context, *Message) (*empty.Empty, error)
-	SendInformation(context.Context, *Message) (*Message, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -116,17 +105,14 @@ func (UnimplementedMessageServiceServer) RequestMountToDoshBank(context.Context,
 func (UnimplementedMessageServiceServer) RequestMountToDirector(context.Context, *Message) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestMountToDirector not implemented")
 }
-func (UnimplementedMessageServiceServer) RequestDecision(context.Context, *Message) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestDecision not implemented")
+func (UnimplementedMessageServiceServer) RequestDecisionToMercenary(context.Context, *Message) (*Message, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestDecisionToMercenary not implemented")
 }
 func (UnimplementedMessageServiceServer) RequestInformationToDataNode(context.Context, *Message) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestInformationToDataNode not implemented")
 }
 func (UnimplementedMessageServiceServer) AddInformation(context.Context, *Message) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddInformation not implemented")
-}
-func (UnimplementedMessageServiceServer) SendInformation(context.Context, *Message) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendInformation not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -177,20 +163,20 @@ func _MessageService_RequestMountToDirector_Handler(srv interface{}, ctx context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_RequestDecision_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MessageService_RequestDecisionToMercenary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Message)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MessageServiceServer).RequestDecision(ctx, in)
+		return srv.(MessageServiceServer).RequestDecisionToMercenary(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.MessageService/RequestDecision",
+		FullMethod: "/proto.MessageService/RequestDecisionToMercenary",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).RequestDecision(ctx, req.(*Message))
+		return srv.(MessageServiceServer).RequestDecisionToMercenary(ctx, req.(*Message))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -231,24 +217,6 @@ func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_SendInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).SendInformation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.MessageService/SendInformation",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).SendInformation(ctx, req.(*Message))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -265,8 +233,8 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _MessageService_RequestMountToDirector_Handler,
 		},
 		{
-			MethodName: "RequestDecision",
-			Handler:    _MessageService_RequestDecision_Handler,
+			MethodName: "RequestDecisionToMercenary",
+			Handler:    _MessageService_RequestDecisionToMercenary_Handler,
 		},
 		{
 			MethodName: "RequestInformationToDataNode",
@@ -275,10 +243,6 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddInformation",
 			Handler:    _MessageService_AddInformation_Handler,
-		},
-		{
-			MethodName: "SendInformation",
-			Handler:    _MessageService_SendInformation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
