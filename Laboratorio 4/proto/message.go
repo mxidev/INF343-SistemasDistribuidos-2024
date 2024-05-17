@@ -54,7 +54,7 @@ func (s *Server) RequestMountToDirector(ctx context.Context, message *Message) (
 	return message, nil // Por mientras
 }
 
-func (s *Server) RequestDecision(ctx context.Context, message *Message) (*Message, error) {
+func (s *Server) RequestDecisionToMercenary(ctx context.Context, message *Message) (*Message, error) {
 	fmt.Printf("Solicitud de Decision recibida: %s\n", message.Body)
 	return message, nil // Por mientras
 }
@@ -114,8 +114,4 @@ func (s *Server) AddInformation(ctx context.Context, message *Message) (*empty.E
 
 	fmt.Println("Informacion almacenada, mensaje enviado.")
 	return &emptypb.Empty{}, nil
-}
-
-func (s *Server) SendInformation(ctx context.Context, message *Message) (*Message, error) {
-	return message, nil
 }

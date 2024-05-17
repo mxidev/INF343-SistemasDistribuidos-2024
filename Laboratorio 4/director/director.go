@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
+	"strings"
 )
 
 func main() {
@@ -10,8 +13,12 @@ func main() {
 		menuInicio := "\n     ====================\n    |1. Iniciar Mision   |\n    |2. Terminar programa|\n     ====================\nIngrese una opcion: "
 		fmt.Println(menuInicio)
 
-		var opcion string
-		fmt.Scanln(&opcion)
+		reader := bufio.NewReader(os.Stdin)
+		opcion, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Error con leer un valor por consola:", err)
+		}
+		opcion = strings.TrimSpace(opcion)
 
 		switch opcion {
 		case "1":
@@ -19,8 +26,11 @@ func main() {
 			menuOpciones := "\n     ============================\n    |1. Avanzar al siguiente piso|\n    |2. Volver al menu anterior  |\n     ============================\nIngrese una opcion: "
 			fmt.Println(menuOpciones)
 
-			var seguir string
-			fmt.Scanln(&seguir)
+			seguir, er := reader.ReadString('\n')
+			if er != nil {
+				fmt.Println("Error con leer el segundo valor por consola:", er)
+			}
+			seguir = strings.TrimSpace(seguir)
 
 			switch seguir {
 			case "1":
@@ -35,7 +45,7 @@ func main() {
 
 		case "2":
 			fmt.Println("Terminando programa ...")
-			continuar = false
+			os.Exit(1)
 		default:
 			fmt.Println("Opcion invalida, intentelo nuevamente.")
 		}
