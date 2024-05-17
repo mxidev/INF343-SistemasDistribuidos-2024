@@ -44,19 +44,14 @@ func init() {
 }
 
 // Override a los metodos de la interfaz
-func (s *Server) RequestMountToDoshBank(ctx context.Context, message *Message) (*Message, error) {
+func (s *Server) RequestMount(ctx context.Context, message *Message) (*Message, error) {
 	fmt.Printf("Solicitud recibida por El Director: %s\n", message.Body)
-	return message, nil // Por mientras
-}
-
-func (s *Server) RequestMountToDirector(ctx context.Context, message *Message) (*Message, error) {
-	fmt.Printf("Solicitud recibida por Mercenario: %s\n", message.Body)
 	return message, nil // Por mientras
 }
 
 func (s *Server) RequestDecisionToMercenary(ctx context.Context, message *Message) (*Message, error) {
 	fmt.Printf("Solicitud de Decision recibida: %s\n", message.Body)
-	return message, nil // Por mientras
+	return &Message{Body: "OK"}, nil // Por mientras
 }
 
 func (s *Server) RequestInformationToDataNode(ctx context.Context, message *Message) (*Message, error) {
