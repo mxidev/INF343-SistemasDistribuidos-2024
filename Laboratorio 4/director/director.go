@@ -13,6 +13,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Struct para el modelo del servidor Director
 type DirectorServer struct {
 	pb.UnimplementedMessageServiceServer
 }
