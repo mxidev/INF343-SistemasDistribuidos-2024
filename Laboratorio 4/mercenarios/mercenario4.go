@@ -7,6 +7,7 @@ import (
 
 func main() {
 
+	//Valores al azar para los bots
 	piso1 := rand.Intn(3) + 1
 	piso2 := rand.Intn(2) + 1
 	piso3_1 := rand.Intn(15) + 1
@@ -17,6 +18,7 @@ func main() {
 
 	fmt.Println(piso1, piso2, piso3_1, piso3_2)
 
+	//El mercenario murió
 	if piso3_2 < 8 {
 		fmt.Println("Mercenario 4 has muerto..")
 		goto muerto

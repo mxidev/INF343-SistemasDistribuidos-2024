@@ -99,10 +99,14 @@ func main() {
 	contPiso := 0
 	for flag {
 		var eleccion string
+
+		//Caso en el que el jugador haya muerto
 		if estado == false {
 			fmt.Print("Usted ha muerto...")
 			goto muerto
 		}
+
+		//Opciones para el jugador
 		MenuInicio := "Jugador, ¿Qué desea hacer?\n [1] Explorar piso\n [2] Ver monto acumulado\nIngrese opción:"
 		fmt.Print(MenuInicio)
 		fmt.Scanln(&eleccion)
@@ -112,6 +116,7 @@ func main() {
 			var eleccionPiso string
 			var eleccionPiso3 [5]string
 
+			//Piso 1
 			if contPiso == 0 {
 				flagPiso1 := true
 				for flagPiso1 {
@@ -140,6 +145,7 @@ func main() {
 					}
 				}
 
+				//Piso 2
 			} else if contPiso == 1 {
 				flagPiso2 := true
 				for flagPiso2 {
@@ -162,6 +168,8 @@ func main() {
 						fmt.Println("Opción no válida")
 					}
 				}
+
+				//Piso 2
 			} else if contPiso == 2 {
 				i := 0
 				fmt.Print("A continuación debe elegir 5 números del 1 al 15\n")
