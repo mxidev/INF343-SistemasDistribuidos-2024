@@ -107,6 +107,16 @@ func main() {
 					client1.RequestInformation(context.Background(), &pb.Message{Body: "NICE"}) // Aqui tenemos que ver bien como enviar el mensaje para que retorne una decision para el piso siguiente.
 					// Quizas algo como tener un contador de pisos que cuando incremente avisarle al Mercenario que ahora cambio de piso.
 					fmt.Println("Avanzando al siguiente piso ...")
+					// Asumiendo que ya implementamos lo de arriba
+					connNN, errNN := grpc.Dial("namenodeHost:port", grpc.WithInsecure())
+					if errNN != nil {
+						fmt.Println("Error en la conexion con host:", errNN)
+					}
+					defer connNN.Close()
+
+					clientNN := pb.NewMessageServiceClient(connNN)
+					clientNN.RequestInformation(context.Background(), &pb.Message{Body: "0:mercenario,piso,decision"}) // Si es 0, entonces envia informacion. Si es 1, entonces pide informacion.
+
 				case "2":
 					fmt.Println("Volviendo al menu anterior ...")
 				default:
