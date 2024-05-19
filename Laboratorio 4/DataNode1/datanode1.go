@@ -19,7 +19,9 @@ type DN1Server struct {
 
 func (s *DN1Server) RequestInformation(ctx context.Context, message *pb.Message) (*pb.Message, error) {
 
-	// Asumiendo que se recibe un mensaje con formato id:merc,piso,decs
+	// Al DataNode le llega un mensaje con formato "id:m,p,d"
+	// 1 es para guardar la informacion en un archivo
+	// 0 para retornar la informacion del archivo
 	split := strings.Split(message.Body, ":")
 	id := split[0]
 	slice := split[1]
@@ -48,7 +50,7 @@ func (s *DN1Server) RequestInformation(ctx context.Context, message *pb.Message)
 		defer file.Close()
 
 		// Se escribe en el archivo
-		file.WriteString("* " + decision)
+		file.WriteString("* " + decision + "\n")
 		fmt.Println("Se escribio la data: *", decision)
 	}
 	return &pb.Message{Body: msg}, nil
@@ -75,7 +77,7 @@ func transferData(name string, floor string) string {
 
 func main() {
 
-	list, err := net.Listen("tcp", ":50051") //conexion sincrona
+	list, err := net.Listen("tcp", ":50051")
 	if err != nil {
 		panic("La conexion no se pudo crear" + err.Error())
 	}
