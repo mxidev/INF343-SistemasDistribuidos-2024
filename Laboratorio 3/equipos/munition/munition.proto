@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "munition";
+
+package munition;
+
+service MunitionService {
+    rpc RequestMunition(MunitionRequest) returns (MunitionResponse);
+}
+
+message MunitionRequest {
+    int32 id_grupo = 1;
+    int32 cantidad_at = 2;
+    int32 cantidad_mp = 3;
+}
+
+message MunitionResponse {
+    bool response = 1;
+    int32 disponible_at = 2;
+    int32 disponible_mp = 3;
+}
