@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 func main() {
 
 	//Valores al azar para los bots
+	rand.Seed(time.Now().UnixNano())
 	piso1 := rand.Intn(3) + 1
 	piso2 := rand.Intn(2) + 1
 	piso3_1 := rand.Intn(15) + 1
