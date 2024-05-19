@@ -118,7 +118,7 @@ func main() {
 				fmt.Println("Terminando programa ...")
 				os.Exit(1)
 			default:
-				fmt.Println("Opcion invalida, intentelo nuevamente.")
+				fmt.Println("Opción invalida, intentelo nuevamente.")
 			}
 		}
 		fmt.Println("Programa finalizado!")
