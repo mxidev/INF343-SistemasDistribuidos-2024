@@ -87,5 +87,4 @@ func main() {
 			panic("El server no se pudo iniciar" + err.Error())
 		}
 	}
-
 }
