@@ -33,7 +33,7 @@ func (s *DirectorServer) RequestInformation(ctx context.Context, req *pb.Message
 
 func queryDoshBank() string {
 	// Implementacion para la consulta al DoshBank
-	conn, err := grpc.Dial("doshbankHost:3030", grpc.WithInsecure())
+	conn, err := grpc.Dial("dist077:3030", grpc.WithInsecure())
 	if err != nil {
 		fmt.Printf("Error conectando con DoshBank: %v\n", err)
 	}
@@ -146,7 +146,7 @@ func main() {
 					clientNN := pb.NewMessageServiceClient(connNN)
 					clientNN.RequestInformation(context.Background(), &pb.Message{Body: "0:mercenario,piso,decision"}) // Si es 0, entonces envia informacion.
 				case "2":
-					connNN, errNN := grpc.Dial("namenodeHost:3060", grpc.WithInsecure())
+					connNN, errNN := grpc.Dial("dist077:3060", grpc.WithInsecure())
 					if errNN != nil {
 						fmt.Println("Error en la conexion con host:", errNN)
 					}

@@ -71,7 +71,7 @@ func main() {
 		fmt.Printf("Error esperando respuesta: %v\n", err)
 	}
 
-	dataNodes := []string{"datanode1:3091", "datanode2:3092", "datanode3:3093"}
+	dataNodes := []string{"dist078:3091", "dist079:3092", "dist080:3093"}
 	s := grpc.NewServer()
 	pb.RegisterMessageServiceServer(s, &NameNodeServer{dataNodes: dataNodes})
 	fmt.Printf("NameNode escuchando: %v\n", lis.Addr())
