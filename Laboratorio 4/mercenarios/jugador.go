@@ -11,33 +11,13 @@ import (
 	"google.golang.org/grpc"
 )
 
-// func comunicar(decision int) {
-// 	//Realizar solicitud
-// 	conn, err := grpc.Dial("host:port", grpc.WithInsecure())
-
-// 	//poner el pb
-// 	proto := pb.NewMessageServiceClient(conn)
-
-// 	//Problemas para ocupar la función
-// 	if err != nil {
-// 		fmt.Println("Error al ocupar función solicitarM()")
-// 	}
-// }
-
 type MercenaryServer struct {
 	pb.UnimplementedMessageServiceServer
 }
 
-func (s *MercenaryServer) RequestInformation(ctx context.Context, req *pb.Message) (*pb.Message, error) {
-	if req.Body == "REQ" {
-		return &pb.Message{Body: "OK"}, nil
-	}
-	return &pb.Message{Body: "NOT OK"}, nil
-}
-
 func sendMessage(flag string) {
 	// Enviar mensaje (flag) al Director
-	conn, err := grpc.Dial("directorHost:port", grpc.WithInsecure())
+	conn, err := grpc.Dial("directorHost:3000", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("No se pudo conectar con el servidor grpc:", err)
 	}
@@ -56,7 +36,7 @@ func sendMessage(flag string) {
 
 func sendQueryAmount() {
 	// Obtener monto acumulado desde el Director
-	conn, err := grpc.Dial("directorHost:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial("directorHost:3000", grpc.WithInsecure())
 	if err != nil {
 		fmt.Printf("Error al conectar con el Director: %v\n", err)
 	}
@@ -74,7 +54,7 @@ func main() {
 	var i int
 	begin := true
 
-	conn, err := net.Listen("tcp", ":50051")
+	conn, err := net.Listen("tcp", ":3000")
 	if err != nil {
 		fmt.Println("Error para esperar una respuesta: ", err)
 	}
@@ -95,16 +75,15 @@ func main() {
 		}
 	}
 	flag := true
-	estado := true
+	// estado := true
 	contPiso := 0
 	for flag {
 		var eleccion string
 
-		//Caso en el que el jugador haya muerto
-		if estado == false {
-			fmt.Print("Usted ha muerto...")
-			goto muerto
-		}
+		// //Caso en el que el jugador haya muerto
+		// if estado == false {
+		// 	fmt.Print("Usted ha muerto...")
+		// }
 
 		//Opciones para el jugador
 		MenuInicio := "Jugador, ¿Qué desea hacer?\n [1] Explorar piso\n [2] Ver monto acumulado\nIngrese opción:"
@@ -114,7 +93,7 @@ func main() {
 		switch eleccion {
 		case "1":
 			var eleccionPiso string
-			var eleccionPiso3 [5]string
+			var eleccionPiso3 string
 
 			//Piso 1
 			if contPiso == 0 {
@@ -123,26 +102,30 @@ func main() {
 					fmt.Print("Jugador, ¿Qué desea ocupar?\n [1] Escopeta\n [2] Rifle automático\n [3] Puños eléctricos ")
 					fmt.Scanln(&eleccionPiso)
 
-					switch eleccionPiso {
-					case "1":
-						//comunicar 1
-						sendMessage("1")
-						contPiso++
-						flagPiso1 = false
+					sendMessage(fmt.Sprintf("%s:%s:%s", "JG", "1", eleccionPiso))
+					contPiso++
+					flagPiso1 = false
 
-					case "2":
-						//comunicar 2
-						sendMessage("2")
-						contPiso++
-						flagPiso1 = false
-					case "3":
-						//comunicar 3
-						sendMessage("3")
-						contPiso++
-						flagPiso1 = false
-					default:
-						fmt.Println("Opción no válida")
-					}
+					// switch eleccionPiso {
+					// case "1":
+					// 	//comunicar 1
+					// 	sendMessage(fmt.Sprintf("%s:%s:%s", "M1", "1", eleccionPiso))
+					// 	contPiso++
+					// 	flagPiso1 = false
+
+					// case "2":
+					// 	//comunicar 2
+					// 	sendMessage(fmt.Sprintf("%s:%s:%s", "M1", "1", eleccionPiso))
+					// 	contPiso++
+					// 	flagPiso1 = false
+					// case "3":
+					// 	//comunicar 3
+					// 	sendMessage("3")
+					// 	contPiso++
+					// 	flagPiso1 = false
+					// default:
+					// 	fmt.Println("Opción no válida")
+					// }
 				}
 
 				//Piso 2
@@ -152,24 +135,28 @@ func main() {
 					fmt.Print("Jugador, ¿Dónde desea ir?\n [1] A\n [2] B ")
 					fmt.Scanln(&eleccionPiso)
 
-					switch eleccionPiso {
-					case "1":
-						//comunicar A
-						sendMessage("A")
-						contPiso++
-						flagPiso2 = false
+					sendMessage(fmt.Sprintf("%s:%s:%s", "JG", "2", eleccionPiso))
+					contPiso++
+					flagPiso2 = false
 
-					case "2":
-						//comunicar B
-						sendMessage("B")
-						contPiso++
-						flagPiso2 = false
-					default:
-						fmt.Println("Opción no válida")
-					}
+					// switch eleccionPiso {
+					// case "1":
+					// 	//comunicar A
+					// 	sendMessage("A")
+					// 	contPiso++
+					// 	flagPiso2 = false
+
+					// case "2":
+					// 	//comunicar B
+					// 	sendMessage("B")
+					// 	contPiso++
+					// 	flagPiso2 = false
+					// default:
+					// 	fmt.Println("Opción no válida")
+					// }
 				}
 
-				//Piso 2
+				//Piso 3
 			} else if contPiso == 2 {
 				i := 0
 				fmt.Print("A continuación debe elegir 5 números del 1 al 15\n")
@@ -179,12 +166,13 @@ func main() {
 					fmt.Scanln(&aux)
 					aux2, _ := strconv.Atoi(aux)
 					if aux2 < 16 && aux2 > 0 {
-						eleccionPiso3[i] = aux
+						eleccionPiso3 += aux + ","
 						i++
 					} else {
 						fmt.Println("Número no válido")
 					}
 				}
+				sendMessage(fmt.Sprintf("%s:%s:%s", "JG", "3", eleccionPiso3))
 				flag = false
 			}
 		case "2":
@@ -194,5 +182,4 @@ func main() {
 			fmt.Println("Opción no válida, volviendo al menú de inicio")
 		}
 	}
-muerto:
 }
