@@ -1,5 +1,5 @@
-# Dockerfile para el servidor central
-FROM golang:latest
+# Dockerfile para el datanode1
+FROM golang:1.22 AS build-stage
 
 WORKDIR /app
 
@@ -7,6 +7,7 @@ COPY . .
 
 
 
+RUN go mod download && go mod verify
 RUN go build -o datanode1 .
 
 EXPOSE 3091

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "Laboratorio 4/proto";
+
+import "google/protobuf/empty.proto";
+
+package proto;
+
+message Message {
+    string body = 1;
+}
+
+service MessageService {
+    rpc RequestMount(Message) returns (Message); 
+    rpc RequestInformation(Message) returns (Message);
+    rpc RequestInformationFromNameNode(Message) returns (Message);
+    rpc AddInformation(Message) returns (google.protobuf.Empty);
+}
