@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	pb "grpc/proto"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -89,8 +90,22 @@ func main() {
 			opcion = strings.TrimSpace(opcion)
 
 			switch opcion {
-			case "1":
+			case "1": //Piso1
 				fmt.Println("Iniciando mision ...")
+				rand.Seed(time.Now().UnixNano())
+				//llega primera decision
+				var dec string
+				x := rand.Intn(100)
+				if dec == "A" && x < 35 && x >= 0 {
+					fmt.Print("VIVO")
+				} else if dec == "B" && x < 70 && x >= 35 {
+					fmt.Print("VIVO")
+				} else if dec == "C" && x <= 100 && x >= 70 {
+					fmt.Print("VIVO")
+				} else {
+					fmt.Print("MUERTO")
+				}
+
 				menuOpciones := "\n     ============================\n    |1. Avanzar al siguiente piso|\n    |2. Volver al menu anterior  |\n     ============================\nIngrese una opcion: "
 				fmt.Println(menuOpciones)
 
@@ -101,13 +116,28 @@ func main() {
 				}
 				seguir = strings.TrimSpace(seguir)
 
-				switch seguir {
+				switch seguir { //Piso2
 				case "1":
 					// Proceso de pisos, mercenarios y demas
 					client1.RequestInformation(context.Background(), &pb.Message{Body: "NICE"}) // Aqui tenemos que ver bien como enviar el mensaje para que retorne una decision para el piso siguiente.
 					// Quizas algo como tener un contador de pisos que cuando incremente avisarle al Mercenario que ahora cambio de piso.
 					fmt.Println("Avanzando al siguiente piso ...")
 					// Asumiendo que ya implementamos lo de arriba
+					tYt := rand.Intn(1) + 1
+					if tYt == 1 {
+						fmt.Println("El pasillo A es el correcto..")
+					} else {
+						fmt.Println("El pasillo B es el correcto..")
+					}
+					var decp2 int
+					if decp2 == 1 && tYt == 1 {
+						fmt.Print("VIVO")
+					} else if decp2 == 2 && tYt == 2 {
+						fmt.Print("VIVO")
+					} else {
+						fmt.Print("MUERTO")
+					}
+
 					connNN, errNN := grpc.Dial("namenodeHost:port", grpc.WithInsecure())
 					if errNN != nil {
 						fmt.Println("Error en la conexion con host:", errNN)
