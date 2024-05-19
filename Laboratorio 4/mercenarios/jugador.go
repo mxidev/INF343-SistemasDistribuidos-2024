@@ -17,7 +17,7 @@ type MercenaryServer struct {
 
 func sendMessage(flag string) {
 	// Enviar mensaje (flag) al Director
-	conn, err := grpc.Dial("directorHost:3000", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:3000", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("No se pudo conectar con el servidor grpc:", err)
 	}
@@ -34,22 +34,6 @@ func sendMessage(flag string) {
 	fmt.Printf("Respuesta del servidor: %s\n", r.Body)
 }
 
-func sendQueryAmount() {
-	// Obtener monto acumulado desde el Director
-	conn, err := grpc.Dial("directorHost:3000", grpc.WithInsecure())
-	if err != nil {
-		fmt.Printf("Error al conectar con el Director: %v\n", err)
-	}
-	defer conn.Close()
-
-	client := pb.NewMessageServiceClient(conn)
-	response, err := client.RequestInformation(context.Background(), &pb.Message{Body: "AMOUNT"})
-	if err != nil {
-		fmt.Printf("Error al consultar el monto acumulado: %v\n", err)
-	}
-	fmt.Printf("Monto acumulado: %s\n", response.Body)
-}
-
 func main() {
 	var i int
 	begin := true
@@ -63,7 +47,7 @@ func main() {
 	serv := grpc.NewServer()
 	pb.RegisterMessageServiceServer(serv, &MercenaryServer{})
 	if err = serv.Serve(conn); err != nil {
-		fmt.Printf("failed to serve: %v\n", err)
+		fmt.Printf("Fallo con el servicio: %v\n", err)
 	}
 
 	for begin {
@@ -74,16 +58,11 @@ func main() {
 			begin = false
 		}
 	}
+
 	flag := true
-	// estado := true
 	contPiso := 0
 	for flag {
 		var eleccion string
-
-		// //Caso en el que el jugador haya muerto
-		// if estado == false {
-		// 	fmt.Print("Usted ha muerto...")
-		// }
 
 		//Opciones para el jugador
 		MenuInicio := "Jugador, ¿Qué desea hacer?\n [1] Explorar piso\n [2] Ver monto acumulado\nIngrese opción:"
@@ -105,27 +84,6 @@ func main() {
 					sendMessage(fmt.Sprintf("%s:%s:%s", "JG", "1", eleccionPiso))
 					contPiso++
 					flagPiso1 = false
-
-					// switch eleccionPiso {
-					// case "1":
-					// 	//comunicar 1
-					// 	sendMessage(fmt.Sprintf("%s:%s:%s", "M1", "1", eleccionPiso))
-					// 	contPiso++
-					// 	flagPiso1 = false
-
-					// case "2":
-					// 	//comunicar 2
-					// 	sendMessage(fmt.Sprintf("%s:%s:%s", "M1", "1", eleccionPiso))
-					// 	contPiso++
-					// 	flagPiso1 = false
-					// case "3":
-					// 	//comunicar 3
-					// 	sendMessage("3")
-					// 	contPiso++
-					// 	flagPiso1 = false
-					// default:
-					// 	fmt.Println("Opción no válida")
-					// }
 				}
 
 				//Piso 2
@@ -138,22 +96,6 @@ func main() {
 					sendMessage(fmt.Sprintf("%s:%s:%s", "JG", "2", eleccionPiso))
 					contPiso++
 					flagPiso2 = false
-
-					// switch eleccionPiso {
-					// case "1":
-					// 	//comunicar A
-					// 	sendMessage("A")
-					// 	contPiso++
-					// 	flagPiso2 = false
-
-					// case "2":
-					// 	//comunicar B
-					// 	sendMessage("B")
-					// 	contPiso++
-					// 	flagPiso2 = false
-					// default:
-					// 	fmt.Println("Opción no válida")
-					// }
 				}
 
 				//Piso 3
@@ -177,7 +119,7 @@ func main() {
 			}
 		case "2":
 			//obtener monto
-			sendQueryAmount()
+			sendMessage("AMOUNT")
 		default:
 			fmt.Println("Opción no válida, volviendo al menú de inicio")
 		}

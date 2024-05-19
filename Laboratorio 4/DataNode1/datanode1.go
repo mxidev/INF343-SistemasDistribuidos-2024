@@ -77,7 +77,7 @@ func transferData(name string, floor string) string {
 
 func main() {
 
-	list, err := net.Listen("tcp", ":50051")
+	list, err := net.Listen("tcp", ":3060")
 	if err != nil {
 		panic("La conexion no se pudo crear" + err.Error())
 	}

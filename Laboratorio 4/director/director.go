@@ -20,21 +20,20 @@ type DirectorServer struct {
 }
 
 func (s *DirectorServer) RequestInformation(ctx context.Context, req *pb.Message) (*pb.Message, error) {
-	if req.Body == "OK" { // Si recibo un "OK", entonces manda "NICE"
-		return &pb.Message{Body: "NICE"}, nil
+	if req.Body == "AMOUNT" {
+		// Llamar al Dosh Bank
+		query := queryDoshBank()
+		return &pb.Message{Body: query}, nil
+	} else {
+		// Formato m:p:d
+		fmt.Println("MPD")
 	}
 	return &pb.Message{Body: "STOP"}, nil
 }
 
-func (s *DirectorServer) RequestMount(ctx context.Context, req *pb.Message) (*pb.Message, error) {
-	// Retorna el amount entregado por DoshBank
-	amount := queryDoshBank()
-	return &pb.Message{Body: amount}, nil
-}
-
 func queryDoshBank() string {
 	// Implementacion para la consulta al DoshBank
-	conn, err := grpc.Dial("doshbankHost:port", grpc.WithInsecure())
+	conn, err := grpc.Dial("doshbankHost:3030", grpc.WithInsecure())
 	if err != nil {
 		fmt.Printf("Error conectando con DoshBank: %v\n", err)
 	}
@@ -58,7 +57,7 @@ func main() {
 	i := 0
 
 	// Conn para mercenario 1
-	conn1, err1 := grpc.Dial("merc1:port", grpc.WithInsecure())
+	conn1, err1 := grpc.Dial("localhost:3000", grpc.WithInsecure())
 	if err1 != nil {
 		fmt.Println("Error en la conexion con host:", err1)
 	}
@@ -68,7 +67,7 @@ func main() {
 	client1 := pb.NewMessageServiceClient(conn1)
 	response1, err := client1.RequestInformation(context.Background(), &pb.Message{Body: "REQ"})
 	if err != nil {
-		fmt.Printf("Error al enviar mensaje: %v\n", err)
+		panic("Error al enviar mensaje al jugador 1")
 	}
 
 	if response1.Body == "OK" {
@@ -76,7 +75,7 @@ func main() {
 		i++
 	}
 
-	if i == 7 {
+	if i == 1 {
 		for continuar {
 			menuInicio := "\n     ====================\n    |1. Iniciar Mision   |\n    |2. Terminar programa|\n     ====================\nIngrese una opcion: "
 			fmt.Println(menuInicio)
@@ -106,7 +105,7 @@ func main() {
 					fmt.Print("MUERTO")
 				}
 
-				menuOpciones := "\n     ============================\n    |1. Avanzar al siguiente piso|\n    |2. Volver al menu anterior  |\n     ============================\nIngrese una opcion: "
+				menuOpciones := "\n     ============================\n    |1. Avanzar al siguiente piso|\n    |2. Consultar Decisiones  |\n     ============================\nIngrese una opcion: "
 				fmt.Println(menuOpciones)
 
 				// Se pide otro dato de entrada para avanzar de piso o volver al menu anterior
@@ -119,11 +118,11 @@ func main() {
 				switch seguir { //Piso2
 				case "1":
 					// Proceso de pisos, mercenarios y demas
-					client1.RequestInformation(context.Background(), &pb.Message{Body: "NICE"}) // Aqui tenemos que ver bien como enviar el mensaje para que retorne una decision para el piso siguiente.
+					client1.RequestInformation(context.Background(), &pb.Message{Body: "GO"}) // Aqui tenemos que ver bien como enviar el mensaje para que retorne una decision para el piso siguiente.
 					// Quizas algo como tener un contador de pisos que cuando incremente avisarle al Mercenario que ahora cambio de piso.
 					fmt.Println("Avanzando al siguiente piso ...")
 					// Asumiendo que ya implementamos lo de arriba
-					tYt := rand.Intn(1) + 1
+					tYt := rand.Intn(2)
 					if tYt == 1 {
 						fmt.Println("El pasillo A es el correcto..")
 					} else {
@@ -138,19 +137,25 @@ func main() {
 						fmt.Print("MUERTO")
 					}
 
-					connNN, errNN := grpc.Dial("namenodeHost:port", grpc.WithInsecure())
+					connNN, errNN := grpc.Dial("namenodeHost:3060", grpc.WithInsecure())
 					if errNN != nil {
 						fmt.Println("Error en la conexion con host:", errNN)
 					}
 					defer connNN.Close()
 
 					clientNN := pb.NewMessageServiceClient(connNN)
-					clientNN.RequestInformation(context.Background(), &pb.Message{Body: "0:mercenario,piso,decision"}) // Si es 0, entonces envia informacion. Si es 1, entonces pide informacion.
-
+					clientNN.RequestInformation(context.Background(), &pb.Message{Body: "0:mercenario,piso,decision"}) // Si es 0, entonces envia informacion.
 				case "2":
-					fmt.Println("Volviendo al menu anterior ...")
+					connNN, errNN := grpc.Dial("namenodeHost:3060", grpc.WithInsecure())
+					if errNN != nil {
+						fmt.Println("Error en la conexion con host:", errNN)
+					}
+					defer connNN.Close()
+
+					clientNN := pb.NewMessageServiceClient(connNN)
+					clientNN.RequestInformation(context.Background(), &pb.Message{Body: "1:mercenario,piso,decision"}) // Si es 1, entonces pide informacion.
 				default:
-					fmt.Println("No se ingreso una opcion valida. Se volvera al menu anterior.")
+					fmt.Println("Volviendo al menu anterior ...")
 					fmt.Println()
 				}
 

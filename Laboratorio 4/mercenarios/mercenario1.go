@@ -13,7 +13,7 @@ import (
 
 func sendMessage(flag string) {
 	// Enviar mensaje (flag) al Director
-	conn, err := grpc.Dial("directorHost:3000", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:3000", grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("No se pudo conectar con el servidor grpc:", err)
 	}

@@ -66,12 +66,12 @@ func (s *NameNodeServer) RequestInformation(ctx context.Context, req *pb.Message
 
 func main() {
 	// Se escucha en un puerto de forma sincrona
-	lis, err := net.Listen("tcp", ":50052")
+	lis, err := net.Listen("tcp", ":3092")
 	if err != nil {
 		fmt.Printf("Error esperando respuesta: %v\n", err)
 	}
 
-	dataNodes := []string{"datanode1:50053", "datanode2:50054", "datanode3:50055"}
+	dataNodes := []string{"datanode1:3091", "datanode2:3092", "datanode3:3093"}
 	s := grpc.NewServer()
 	pb.RegisterMessageServiceServer(s, &NameNodeServer{dataNodes: dataNodes})
 	fmt.Printf("NameNode escuchando: %v\n", lis.Addr())

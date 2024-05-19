@@ -29,7 +29,7 @@ func (s *DoshBankServer) AddAmount(amount int) {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":50053")
+	lis, err := net.Listen("tcp", ":3000")
 	if err != nil {
 		fmt.Printf("Error esperando respuesta: %v\n", err)
 	}
