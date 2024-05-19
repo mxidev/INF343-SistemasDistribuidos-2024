@@ -8,7 +8,6 @@ package proto
 
 import (
 	context "context"
-	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,8 +24,6 @@ const _ = grpc.SupportPackageIsVersion7
 type MessageServiceClient interface {
 	RequestMount(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
 	RequestInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
-	RequestInformationFromNameNode(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error)
-	AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type messageServiceClient struct {
@@ -55,32 +52,12 @@ func (c *messageServiceClient) RequestInformation(ctx context.Context, in *Messa
 	return out, nil
 }
 
-func (c *messageServiceClient) RequestInformationFromNameNode(ctx context.Context, in *Message, opts ...grpc.CallOption) (*Message, error) {
-	out := new(Message)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/RequestInformationFromNameNode", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *messageServiceClient) AddInformation(ctx context.Context, in *Message, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/proto.MessageService/AddInformation", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MessageServiceServer is the server API for MessageService service.
 // All implementations must embed UnimplementedMessageServiceServer
 // for forward compatibility
 type MessageServiceServer interface {
 	RequestMount(context.Context, *Message) (*Message, error)
 	RequestInformation(context.Context, *Message) (*Message, error)
-	RequestInformationFromNameNode(context.Context, *Message) (*Message, error)
-	AddInformation(context.Context, *Message) (*empty.Empty, error)
 	mustEmbedUnimplementedMessageServiceServer()
 }
 
@@ -93,12 +70,6 @@ func (UnimplementedMessageServiceServer) RequestMount(context.Context, *Message)
 }
 func (UnimplementedMessageServiceServer) RequestInformation(context.Context, *Message) (*Message, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RequestInformation not implemented")
-}
-func (UnimplementedMessageServiceServer) RequestInformationFromNameNode(context.Context, *Message) (*Message, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RequestInformationFromNameNode not implemented")
-}
-func (UnimplementedMessageServiceServer) AddInformation(context.Context, *Message) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddInformation not implemented")
 }
 func (UnimplementedMessageServiceServer) mustEmbedUnimplementedMessageServiceServer() {}
 
@@ -149,42 +120,6 @@ func _MessageService_RequestInformation_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _MessageService_RequestInformationFromNameNode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).RequestInformationFromNameNode(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.MessageService/RequestInformationFromNameNode",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).RequestInformationFromNameNode(ctx, req.(*Message))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _MessageService_AddInformation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Message)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MessageServiceServer).AddInformation(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto.MessageService/AddInformation",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MessageServiceServer).AddInformation(ctx, req.(*Message))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // MessageService_ServiceDesc is the grpc.ServiceDesc for MessageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -199,14 +134,6 @@ var MessageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RequestInformation",
 			Handler:    _MessageService_RequestInformation_Handler,
-		},
-		{
-			MethodName: "RequestInformationFromNameNode",
-			Handler:    _MessageService_RequestInformationFromNameNode_Handler,
-		},
-		{
-			MethodName: "AddInformation",
-			Handler:    _MessageService_AddInformation_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
